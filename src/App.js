@@ -1,6 +1,6 @@
 import { Alchemy, Network } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 
 // Refer to the README doc for more information about using API
@@ -18,24 +18,17 @@ const settings = {
 const alchemy = new Alchemy(settings);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [blockNumber, setBlockNumber] = useState();
+
+  useEffect(() => {
+    async function getBlockNumber() {
+      setBlockNumber(await alchemy.core.getBlockNumber());
+    }
+
+    getBlockNumber();
+  });
+
+  return <div className="App">Block Number: {blockNumber}</div>;
 }
 
 export default App;
