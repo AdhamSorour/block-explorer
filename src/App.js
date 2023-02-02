@@ -1,6 +1,8 @@
 import { Alchemy, Network } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 
+import Blockchain from './Blockchain';
+
 // Refer to the README doc for more information about using API
 // keys in client-side code. You should never do this in production
 // level code.
@@ -16,17 +18,59 @@ const settings = {
 const alchemy = new Alchemy(settings);
 
 function App() {
-  const [blockNumber, setBlockNumber] = useState();
+  const [input, setInput] = useState("");
+  const [blockNumber, setBlockNumber] = useState(-1);
+  const [latestBlock, setLatestBlock] = useState(-1);
 
-  useEffect(() => {
-    async function getBlockNumber() {
-      setBlockNumber(await alchemy.core.getBlockNumber());
+  const handleInput = (e) => {
+    const result = e.target.value.replace(/\D/g, '');
+    setInput(result);
+  }
+
+  async function setLatestBlockNumber() {
+    const latest = await alchemy.core.getBlockNumber()
+    setLatestBlock(latest);
+    setBlockNumber(latest);
+  }
+  useEffect(() => { setLatestBlockNumber(); }, []);
+
+  async function setNextBlockNumber() {
+    if (blockNumber < latestBlock) setBlockNumber(blockNumber+1);
+    else {
+      const latest = await alchemy.core.getBlockNumber()
+      setLatestBlock(latest);
+      if (blockNumber < latest) setBlockNumber(blockNumber+1);
     }
+  }
 
-    getBlockNumber();
-  });
+  function setPrevBlockNumber() {
+    if (blockNumber) setBlockNumber(blockNumber-1);
+  }
 
-  return <div className="App">Block Number: {blockNumber}</div>;
+  async function setInputBlock() {
+    const block = parseInt(input);
+    if (block <= latestBlock) setBlockNumber(block);
+    else {
+      const latest = await alchemy.core.getBlockNumber()
+      setLatestBlock(latest);
+      if (block <= latest) setBlockNumber(block);
+    }
+  }
+
+  return (<>
+    <input 
+      value={input} 
+      onChange={handleInput} 
+      onKeyDown={e => { if(e.key === 'Enter') setInputBlock(); }}
+      placeholder='Find block by number'
+      maxLength="10"
+    />
+    <button onClick={() => setInputBlock()}>Find</button>
+    <button onClick={() => setNextBlockNumber()}>Next</button>
+    <button onClick={() => setPrevBlockNumber()}>Prev</button>
+    <button onClick={() => setLatestBlockNumber()}>Latest</button>
+    <Blockchain blockNumber={blockNumber}/>
+  </>);
 }
 
 export default App;
