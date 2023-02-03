@@ -1,5 +1,5 @@
 import { Alchemy, Network } from 'alchemy-sdk';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import Blockchain from './Blockchain';
 
@@ -18,13 +18,13 @@ const settings = {
 const alchemy = new Alchemy(settings);
 
 function App() {
-  const [input, setInput] = useState("");
   const [blockNumber, setBlockNumber] = useState(-1);
   const [latestBlock, setLatestBlock] = useState(-1);
+  const inputRef = useRef();
 
   const handleInput = (e) => {
     const result = e.target.value.replace(/\D/g, '');
-    setInput(result);
+    inputRef.current.value = result;
   }
 
   async function setLatestBlockNumber() {
@@ -48,7 +48,7 @@ function App() {
   }
 
   async function setInputBlock() {
-    const block = parseInt(input);
+    const block = parseInt(inputRef.current.value);
     if (block <= latestBlock) setBlockNumber(block);
     else {
       const latest = await alchemy.core.getBlockNumber()
@@ -59,11 +59,10 @@ function App() {
 
   return (<>
     <input 
-      value={input} 
+      ref={inputRef} 
       onChange={handleInput} 
-      onKeyDown={e => { if(e.key === 'Enter') setInputBlock(); }}
+      onKeyDown={e => { if (e.key==='Enter') setInputBlock(); }}
       placeholder='Find block by number'
-      maxLength="10"
     />
     <button onClick={() => setInputBlock()}>Find</button>
     <button onClick={() => setNextBlockNumber()}>Next</button>
