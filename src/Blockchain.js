@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Block from "./Block"
 
-export default function Blockchain({blockNumber}) {
+export default function Blockchain({blockNumber, alchemy}) {
     const [blocks, setBlocks] = useState([]);
 
     useEffect(() => {
@@ -12,7 +12,7 @@ export default function Blockchain({blockNumber}) {
     
     return (
         blocks.map(block => {
-            return <Block blockNumber={block} key={block}/>
+            return <Block blockNumber={block} alchemy={alchemy} key={block}/>
         })
     )
 }

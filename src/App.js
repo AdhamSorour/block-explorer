@@ -64,11 +64,12 @@ function App() {
       onKeyDown={e => { if (e.key==='Enter') setInputBlock(); }}
       placeholder='Find block by number'
     />
-    <button onClick={() => setInputBlock()}>Find</button>
-    <button onClick={() => setNextBlockNumber()}>Next</button>
-    <button onClick={() => setPrevBlockNumber()}>Prev</button>
-    <button onClick={() => setLatestBlockNumber()}>Latest</button>
-    <Blockchain blockNumber={blockNumber}/>
+    <button onClick={setInputBlock}>Find</button>
+    <button onClick={setNextBlockNumber}>Next</button>
+    <button onClick={setPrevBlockNumber}>Prev</button>
+    <button onClick={setLatestBlockNumber}>Latest</button>
+    <p/>
+    <Blockchain blockNumber={blockNumber} alchemy={alchemy}/>
   </>);
 }
 
