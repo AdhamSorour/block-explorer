@@ -30,7 +30,7 @@ export default function BlockView({ setBlockNumber }) {
 	return (
 		<>
 			<p><Link to="/">Home</Link></p>
-			<h2>Block Number: {blockNumber}</h2>
+			<h2>Block {blockNumber}</h2>
 			<h3>Timestamp: {new Date(timestamp * 1_000).toLocaleString()}</h3>
 			<h3>Transactions: {transactions && transactions.length}</h3>
 			<hr />
@@ -42,10 +42,10 @@ export default function BlockView({ setBlockNumber }) {
 
 function Transactions({ transactions }) {
 	return (
-		transactions.map(tx => {
+		transactions.map((tx, i) => {
 			return (
 				<div key={tx.hash}>
-					<h4>Hash: {tx.hash}</h4>
+					<h4>Tx{i} hash: {tx.hash}</h4>
 					<p>&emsp; From: {tx.from}</p>
 					<p>&emsp; To: {tx.to}</p>
 				</div>
