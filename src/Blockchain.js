@@ -9,7 +9,7 @@ const settings = {
 const alchemy = new Alchemy(settings);
 
 
-export default function Blockchain({ blockNumber, setBlockNumber }) {
+export default function Blockchain({ blockNumber }) {
 	const [blocks, setBlocks] = useState([]);
 
 	useEffect(() => {
@@ -20,12 +20,13 @@ export default function Blockchain({ blockNumber, setBlockNumber }) {
 
 	return (
 		blocks.map(block => {
-			return <Block blockNumber={block} setBlockNumber={setBlockNumber} key={block} />
+			return <Block blockNumber={block} key={block} />
 		})
 	)
 }
 
-function Block({ blockNumber, setBlockNumber }) {
+
+function Block({ blockNumber }) {
 	const [hash, setHash] = useState();
 	const [numTx, setNumTx] = useState();
 
@@ -36,10 +37,10 @@ function Block({ blockNumber, setBlockNumber }) {
 			setHash(block.hash);
 		}
 		setBlockInfo();
-	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [blockNumber]);
 
 	return (<>
-		<h4><Link to="/blockview" onClick={() => setBlockNumber(blockNumber)}>Block {blockNumber}:</Link></h4>
+		<h4><Link to={`/block/${blockNumber}`}>Block {blockNumber}:</Link></h4>
 		<p>&emsp; Block Hash: {hash}</p>
 		<p>&emsp; Number of Transactions: {numTx}</p>
 	</>)

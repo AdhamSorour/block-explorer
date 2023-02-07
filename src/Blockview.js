@@ -1,6 +1,6 @@
 import { Alchemy, Network } from "alchemy-sdk";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const settings = {
 	apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
@@ -9,18 +9,23 @@ const settings = {
 const alchemy = new Alchemy(settings);
 
 
-export default function BlockView({ blockNumber }) {
+export default function BlockView({ setBlockNumber }) {
 	const [timestamp, setTimestamp] = useState();
 	const [transactions, setTransactions] = useState([]);
 
+	const params = useParams();
+	const blockNumber = parseInt(params.blockNumber);
+
 	useEffect(() => {
-		async function getTransactions() {
+		async function postTransactions() {
 			const block = await alchemy.core.getBlockWithTransactions(blockNumber);
 			setTimestamp(block.timestamp);
 			setTransactions(block.transactions);
 		}
-		getTransactions();
-	}, [blockNumber]);
+
+		setBlockNumber(blockNumber);
+		postTransactions();
+	}, [blockNumber, setBlockNumber]);
 
 	return (
 		<>
@@ -33,6 +38,7 @@ export default function BlockView({ blockNumber }) {
 		</>
 	);
 }
+
 
 function Transactions({ transactions }) {
 	return (

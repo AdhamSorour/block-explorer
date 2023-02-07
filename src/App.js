@@ -1,6 +1,6 @@
 import { Alchemy, Network } from 'alchemy-sdk';
 import { useEffect, useState, useRef } from 'react';
-import { Routes, Route, Link, Outlet } from "react-router-dom";
+import { Routes, Route, Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 
 import Blockchain from './Blockchain';
 import BlockView from './Blockview';
@@ -26,8 +26,8 @@ export default function App() {
 	return (
 		<Routes>
 			<Route path="/" element={<Layout blockNumber={blockNumber} setBlockNumber={setBlockNumber} />}>
-				<Route index element={<Blockchain blockNumber={blockNumber} setBlockNumber={setBlockNumber} />} />
-				<Route path="blockview" element={<BlockView blockNumber={blockNumber} />} />
+				<Route index element={<Blockchain blockNumber={blockNumber} />} />
+				<Route path="block/:blockNumber" element={<BlockView setBlockNumber={setBlockNumber}/>} />
 				<Route path="*" element={<NoMatch />} />
 			</Route>
 		</Routes>
@@ -37,22 +37,25 @@ export default function App() {
 
 function Layout({ blockNumber, setBlockNumber }) {
 	const [latestBlock, setLatestBlock] = useState(0);
-	const inputRef = useRef();
+	const navigate = useNavigate();
+	const location = useLocation();
 
-
-	async function setLatestBlockNumber() {
-		const latest = await alchemy.core.getBlockNumber();
-		setLatestBlock(latest)
-		setBlockNumber(latest);
-	}
 	useEffect(() => {
-		setLatestBlockNumber();
+		if (location.pathname === "/") setLatestBlockNumber();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-
+	const inputRef = useRef();
 	const handleInput = (e) => {
 		const result = e.target.value.replace(/\D/g, '');
 		inputRef.current.value = result;
+	}
+
+	const gotoBlock = (blockNumber) => {
+		if (location.pathname.startsWith("/block")) {
+			navigate(`/block/${blockNumber}`);
+		} else {
+			setBlockNumber(blockNumber);
+		}
 	}
 
 
@@ -60,25 +63,31 @@ function Layout({ blockNumber, setBlockNumber }) {
 		const inputBlock = parseInt(inputRef.current.value);
 		inputRef.current.value = "";
 
-		if (inputBlock <= latestBlock) setBlockNumber(inputBlock);
+		if (inputBlock <= latestBlock) gotoBlock(inputBlock);
 		else {
 			const latest = await alchemy.core.getBlockNumber();
 			setLatestBlock(latest);
-			if (inputBlock <= latest) setBlockNumber(inputBlock);
+			if (inputBlock <= latest) gotoBlock(inputBlock);
 		}
 	}
 
 	function setPrevBlockNumber() {
-		if (blockNumber) setBlockNumber((curr) => curr - 1);
+		if (blockNumber) gotoBlock(blockNumber - 1);
 	}
 
 	async function setNextBlockNumber() {
-		if (blockNumber < latestBlock) setBlockNumber(blockNumber + 1);
+		if (blockNumber < latestBlock) gotoBlock(blockNumber + 1);
 		else {
 			const latest = await alchemy.core.getBlockNumber();
 			setLatestBlock(latest);
-			if (blockNumber < latest) setBlockNumber((curr) => curr + 1);
+			if (blockNumber < latest) gotoBlock(blockNumber + 1);
 		}
+	}
+
+	async function setLatestBlockNumber() {
+		const latest = await alchemy.core.getBlockNumber();
+		setLatestBlock(latest)
+		gotoBlock(latest);
 	}
 
 	return (
@@ -94,13 +103,13 @@ function Layout({ blockNumber, setBlockNumber }) {
 			<button onClick={setNextBlockNumber}>Next</button>
 			<button onClick={setLatestBlockNumber}>Latest</button>
 			<hr />
-			{/* An <Outlet> renders whatever child route is currently active,
-          so you can think about this <Outlet> as a placeholder for
-          the child routes defined above. */}
+			{/* An <Outlet> renders whatever child route is currently active, you can think 
+			about this <Outlet> as a placeholder for the child routes defined above. */}
 			<Outlet />
 		</>
 	);
 }
+
 
 function NoMatch() {
 	return (
