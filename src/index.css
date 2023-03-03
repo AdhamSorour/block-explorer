@@ -1,0 +1,153 @@
+/* Global styles */
+body {
+  background-color: #f5f5f5;
+  font-family: Arial, sans-serif;
+  margin: 100;
+  padding: 0;
+}
+
+a {
+  color: #0077cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input {
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-left: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+  background-color: #005ea2;
+}
+
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+
+/* Layout styles */
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.layout input {
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 8px;
+  margin-right: 10px;
+  width: 60%;
+}
+
+.layout input:focus {
+  outline: none;
+  box-shadow: 0 0 4px #0077cc;
+}
+
+.layout button {
+  align-self: flex-start;
+}
+
+/* Blockchain styles */
+.blockchain {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.block {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 20px;
+  transition: box-shadow 0.3s ease;
+}
+
+.block:hover {
+  box-shadow: 0 0 4px #0077cc;
+}
+
+.block h4 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.block p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+/* Block view styles */
+.block-view {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.block-view h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.block-view h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Transactions styles */
+.transactions {
+  margin-top: 20px;
+}
+
+.transactions div {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 20px;
+  transition: box-shadow 0.3s ease;
+}
+
+.transactions div:hover {
+  box-shadow: 0 0 4px #0077cc;
+}
+
+.transactions h4 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.transactions p {
+  font-size: 16px;
+  margin: 10px 0;
+}
